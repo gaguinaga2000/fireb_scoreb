@@ -5,6 +5,7 @@ import 'all_counters_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './counter_page.dart';
 import './profile_page.dart';
+import './reset_pass_page.dart';
 
 class AddCounterPage extends StatefulWidget {
   final String title;
@@ -58,13 +59,13 @@ class _AddCounterPageState extends State<AddCounterPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ProfilePage(user: widget.user, onSignedOut: widget.onSignedOut)));
+                  builder: (context) => ProfilePage(
+                      user: widget.user, onSignedOut: widget.onSignedOut)));
         },
         child: Text("Update Profile"),
       ),
-
       logOutBtn(),
-
+      resetBtn(),
     ]);
   }
 
@@ -124,6 +125,26 @@ class _AddCounterPageState extends State<AddCounterPage> {
   } //ENd createDate function
   //======================================
 
+//Reset Button
+  Widget resetBtn() {
+    return FlatButton(
+        color: Colors.blue,
+        child: Text("RESET"),
+        onPressed: () {
+          invokeResetPage();
+        });
+  }
+//=================================
+
+void invokeResetPage(){
+
+ Navigator.push(
+       context,
+           MaterialPageRoute(builder: (context) => ResetPage(user: widget.user)));  
+ 
+}
+
+
 //logOutButton
   Widget logOutBtn() {
     return FlatButton(
@@ -144,6 +165,10 @@ class _AddCounterPageState extends State<AddCounterPage> {
     }
   } //END signout function
 //====================================
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    return FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
 
 //Firebase signout
   Future<void> signOut() async {

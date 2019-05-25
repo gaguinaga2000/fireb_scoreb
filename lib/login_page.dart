@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './signup_page.dart';
-import './add_counter_page.dart';
+import './forgot_password.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback onSignedOut;
@@ -53,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text("Login", style: TextStyle(color: Colors.white)),
                   color: Colors.blue,
                 ),
+                forgotPassBtn(),
                 FlatButton(
                   onPressed: invokeSignupPage,
                   child: Text(
@@ -60,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontSize: 18.0),
                   ),
                 ),
+                
               ],
             )),
       ),
@@ -96,5 +98,19 @@ class _LoginPageState extends State<LoginPage> {
   } //END
 //==================================
 
+Widget forgotPassBtn(){
+  return FlatButton(
+    onPressed: invokeForgotPassPage,
+    child:Text("forgot password?") ,
+    
+  );
+}
+
+void invokeForgotPassPage(){
+ Navigator.push(
+       context,
+           MaterialPageRoute(builder: (context) => ForgotPassword()));  
+
+}
 //-------------------------------------------------------
 }
