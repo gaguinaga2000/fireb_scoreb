@@ -80,6 +80,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     Map<String, dynamic> updateProfile = {
       "display_name": user.email,
+      "email": user.email,
       "age": "",
       "favorite_quote": "",
     };

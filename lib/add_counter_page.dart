@@ -137,11 +137,9 @@ class _AddCounterPageState extends State<AddCounterPage> {
 //=================================
 
 void invokeResetPage(){
-
  Navigator.push(
        context,
            MaterialPageRoute(builder: (context) => ResetPage(user: widget.user)));  
- 
 }
 
 

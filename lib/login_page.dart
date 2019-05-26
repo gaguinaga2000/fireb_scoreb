@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(title: Text('Login to iSkorez')),
         body: Form(
@@ -77,12 +78,6 @@ class _LoginPageState extends State<LoginPage> {
       try {
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
-
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (BuildContext context) => AddCounterPage(title: 'Add Counter', user: user)));
-
         //On succesful logIn, set _authStatus = AuthStatus.signedIn;
         widget.onSignedIn(user);
       } catch (e) {
