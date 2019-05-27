@@ -1,10 +1,7 @@
 import 'dart:async';
-import './logout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
-import './models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ResetPage extends StatefulWidget {
@@ -21,17 +18,13 @@ class _ResetPageState extends State<ResetPage> {
   String displayName, favQuote;
   int userAge;
 
-  int _btnState = 0;
+
   int _resetBtnState = 0;
 
   bool infoLoaded = false;
 
   static String preName, preQuote;
   int preAge;
-
-  TextEditingController _displayNameControl;
-  TextEditingController _ageControl;
-  TextEditingController _quoteControl;
 
   @override
   void initState() {

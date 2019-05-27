@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import './login_page.dart';
 import 'all_counters_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './counter_page.dart';
