@@ -62,7 +62,6 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontSize: 18.0),
                   ),
                 ),
-                
               ],
             )),
       ),

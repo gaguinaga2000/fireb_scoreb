@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
@@ -11,9 +12,14 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String error = "";
+
   var _emailControl = TextEditingController();
   String _email;
 
+  int _btnState = 0;
+
+//SNACK BAR stuff------------------------------------------------
   String _snackMessage =
       "Please check your email to reset your password. Thank you.";
 
@@ -31,7 +37,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
     _scaffoldKey.currentState.showSnackBar(snackBar);
   } //END SnackBar function
-  //============================================
+  //============================================================
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +46,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       backgroundColor: Colors.grey[850],
       body: mainContent(),
     );
+  }
+
+//resetBtnChild
+  Widget resetBtnChild() {
+    if (_btnState == 0) {
+      return Text("Reset password",
+          style: TextStyle(color: Colors.white, fontSize: 19.0));
+    } else if (_btnState == 1) {
+      return CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    } else {
+      return Icon(Icons.check, color: Colors.white);
+    }
   }
 
   Widget mainContent() {
@@ -72,7 +92,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
 
             Center(child: resetPasswordBtn()),
-            
+
             Center(child: backButton()),
           ],
         ));
@@ -86,7 +106,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Back", style: TextStyle(fontSize: 21.0, color: Colors.white30))),
+          child: Text("Back",
+              style: TextStyle(fontSize: 21.0, color: Colors.white30))),
     );
   } //END Back button
   //=================================================
@@ -125,35 +146,45 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         borderRadius: BorderRadius.circular(40.0),
       ),
       child: FlatButton(
-        onPressed: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-          checkIfEmailExists().then((QuerySnapshot docs) {
-            if (docs.documents.isNotEmpty && _email != "") {
-              setState(() {
-                _snackMessage =
-                    "Please check your email to reset your password. Thank you.";
-                _snackBgColor = Color(0xFF10816b);
-              });
-              _showSnackBar();
-              print("found");
-              // sendPasswordResetEmail(_email);
-            } else {
-              setState(() {
-                _snackBgColor = Colors.red[700];
-                _snackMessage =
-                    "Email does not exist. Please enter a valid email address.";
-              });
-              _showSnackBar();
-              print("email does not exist");
-            }
+        onPressed: () async {
+          setState(() {
+            _btnState = 1;
           });
+
+          FocusScope.of(context).requestFocus(new FocusNode());
+
+          await sendPasswordResetEmail(_email).then((value) {
+            _resetSuccess();
+          }).catchError((e) {
+            //if e is not null, means we caught an error.
+            //So, display info about error in snackBar
+            setState(() {
+              _btnState = 0;
+              _snackBgColor = Colors.red[800];
+              _snackMessage =
+                  "Email not found. Please enter a valid email address.";
+            });
+            print("printing" + e.code);
+            _showSnackBar();
+          } //End catchError
+              );
         },
-        child: Text("Reset password",
-            style: TextStyle(color: Colors.white, fontSize: 19.0)),
+        child: resetBtnChild(),
       ),
     );
   } //END Reset button
   //===================================================
+
+  //setbtnState = 2
+  void _resetSuccess() {
+    setState(() {
+      _btnState = 2;
+      _snackMessage =
+          "Please check your email to reset your password. Thank you.";
+      _snackBgColor = Color(0xFF10816b);
+    });
+    _showSnackBar();
+  }
 
 //check if user email exists
   Future<QuerySnapshot> checkIfEmailExists() async {
