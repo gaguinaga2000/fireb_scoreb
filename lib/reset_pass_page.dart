@@ -34,7 +34,7 @@ class _ResetPageState extends State<ResetPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+     resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[850],
       appBar: AppBar(
         backgroundColor: Colors.red[800],

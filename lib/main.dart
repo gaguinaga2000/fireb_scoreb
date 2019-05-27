@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './login_page.dart';
 import './add_counter_page.dart';
+import 'package:flutter/services.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
@@ -22,7 +23,7 @@ class _MyAppState extends State<MyApp> {
 
   FirebaseUser user;
 
- void _signedIn(FirebaseUser loggedInUser) {
+  void _signedIn(FirebaseUser loggedInUser) {
     setState(() {
       _authStatus = AuthStatus.signedIn;
       user = loggedInUser;
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
         _authStatus =
             userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
       });
-     // print("id " + userId);
+      // print("id " + userId);
     });
 
     super.initState();
@@ -56,7 +57,10 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: determineHomePage(),
+      home: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: determineHomePage(),
+      ),
     );
   }
 
@@ -64,8 +68,12 @@ class _MyAppState extends State<MyApp> {
   Widget determineHomePage() {
     switch (_authStatus) {
       case AuthStatus.notSignedIn:
-        return LoginPage(onSignedIn: _signedIn, onSignedOut: _signedOut);
-      default: 
+        return GestureDetector(
+            onTap: () {
+              SystemChannels.textInput.invokeMethod('TextInput.hide');
+            },
+            child: LoginPage(onSignedIn: _signedIn, onSignedOut: _signedOut));
+      default:
         return AddCounterPage(
             title: 'Add Counter', user: user, onSignedOut: _signedOut);
     }

@@ -141,6 +141,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         color: Color(0xFF21947e),
         border: Border.all(width: 0.0, color: Color(0xff0e5648)),
         borderRadius: BorderRadius.circular(40.0),
+        boxShadow: [
+          new BoxShadow(
+            color: Color(0xff096251),
+            offset: new Offset(0, 6.0),
+          )
+        ],
       ),
       child: FlatButton(
         onPressed: () async {

@@ -18,10 +18,24 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String _email, _password;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   int _btnState = 0;
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+//login Failure snackBar
+  void _showSnackbar() {
+    final SnackBar loginSnack = SnackBar(
+      content: Text(
+        "You entered an incorrect email, password, or both.",
+        style: TextStyle(color: Colors.white, fontSize: 17.0),
+      ),
+      backgroundColor: Colors.red[800],
+    );
+    _scaffoldKey.currentState.showSnackBar(loginSnack);
+  } //END login Failure snackBar
+//=================================================
 
   //mainContent
   Widget mainContent() {
@@ -41,17 +55,14 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        resizeToAvoidBottomPadding: false,
-        backgroundColor: Colors.grey[850],
-        body: Padding(
-          padding: const EdgeInsets.only(
-              top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
-          child: mainContent(),
-        ),
-      ),
+    return Scaffold(
+      key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.grey[850],
+      body: Padding(
+            padding: const EdgeInsets.only(
+                top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
+            child: mainContent()),
     );
   } //END build Method
   //==============================
@@ -60,28 +71,35 @@ class _LoginPageState extends State<LoginPage> {
   Widget loginBtnChild() {
     if (_btnState == 0) {
       return Text("Login",
-          style: TextStyle(color: Colors.white, fontSize: 19.0));
+          style: TextStyle(color: Colors.white, fontSize: 20.0));
     } else {
       return CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
       );
     }
-  }
+  } //END loginBtnChild
+//==========================================
 
 //Sign in funtion
 //Validates form and SignsIn with FirebaseAuth
   void signIn() async {
+    FirebaseUser user;
     final formState = _formKey.currentState;
+
     if (formState.validate()) {
       formState.save();
-      try {
-        FirebaseUser user = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: _email, password: _password);
+
+      user = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: _email, password: _password)
+          .then((onValue) {
         //On succesful logIn, set _authStatus = AuthStatus.signedIn;
         widget.onSignedIn(user);
-      } catch (e) {
-        print(e);
-      }
+      }).catchError((e) {
+        setState(() {
+          _btnState = 0;
+        });
+        _showSnackbar();
+      });
     }
   } //END Sign in funtion
   //=========================================
@@ -107,6 +125,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 15.0),
             //Login Button
             loginButton(),
+              SizedBox(height: 5.0),
             notMemberButton(),
           ],
         ));
@@ -127,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextFormField(
         validator: (input) {
           if (input.isEmpty) {
-            return "Field cannot be empty";
+            return "Email field cannot be empty";
           }
         },
         onSaved: (input) => _email = input,
@@ -157,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextFormField(
         validator: (input) {
           if (input.isEmpty) {
-            return "Field cannot be empty";
+            return "Password field cannot be empty";
           }
         },
         onSaved: (input) => _password = input,
@@ -191,6 +210,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: FlatButton(
         onPressed: () {
+          FocusScope.of(context).requestFocus(FocusNode());
           setState(() {
             _btnState = 1;
           });
@@ -215,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerRight,
       child: FlatButton(
         onPressed: invokeForgotPassPage,
-        child: Text("forgot password?",
+        child: Text("Forgot password?",
             style: TextStyle(fontSize: 18.0, color: Colors.grey)),
       ),
     );
