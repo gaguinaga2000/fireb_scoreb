@@ -3,8 +3,6 @@ import './logout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
-import './models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -174,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
     docRef.setData(userInfo).whenComplete(() {
       setState(() {
         _btnState = 2;
-        FocusScope.of(context).requestFocus(new FocusNode());
+        FocusScope.of(context).requestFocus(FocusNode());
       });
       print("user info updated");
     });

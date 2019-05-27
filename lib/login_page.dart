@@ -60,9 +60,9 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[850],
       body: Padding(
-            padding: const EdgeInsets.only(
-                top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
-            child: mainContent()),
+          padding: const EdgeInsets.only(
+              top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
+          child: mainContent()),
     );
   } //END build Method
   //==============================
@@ -83,16 +83,13 @@ class _LoginPageState extends State<LoginPage> {
 //Sign in funtion
 //Validates form and SignsIn with FirebaseAuth
   void signIn() async {
-    FirebaseUser user;
     final formState = _formKey.currentState;
-
     if (formState.validate()) {
       formState.save();
-
-      user = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: _email, password: _password)
-          .then((onValue) {
-        //On succesful logIn, set _authStatus = AuthStatus.signedIn;
+          .then((user) {
+        //On succesful logIn, set _authStatus = AuthStatus.signedIn
         widget.onSignedIn(user);
       }).catchError((e) {
         setState(() {
@@ -110,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
       "assets/logo_png4.png",
       scale: 1.4,
     );
-  } //enD logo
+  } // END logo
 //================================
 
   Widget displayForm() {
@@ -125,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 15.0),
             //Login Button
             loginButton(),
-              SizedBox(height: 5.0),
+            SizedBox(height: 5.0),
             notMemberButton(),
           ],
         ));

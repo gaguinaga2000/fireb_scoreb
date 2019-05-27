@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
         _authStatus =
             userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
       });
-      // print("id " + userId);
+    //   print("id " + userId);
     });
 
     super.initState();
