@@ -27,10 +27,8 @@ class _LoginPageState extends State<LoginPage> {
 //login Failure snackBar
   void _showSnackbar() {
     final SnackBar loginSnack = SnackBar(
-      content: Text(
-        "You entered an incorrect email, password, or both.",
-        style: TextStyle(color: Colors.white, fontSize: 17.0),
-      ),
+      content: Text("You entered an incorrect email, password, or both.",
+          style: TextStyle(color: Colors.white, fontSize: 18.0)),
       backgroundColor: Colors.red[800],
     );
     _scaffoldKey.currentState.showSnackBar(loginSnack);
@@ -55,14 +53,19 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey[850],
-      body: Padding(
-          padding: const EdgeInsets.only(
-              top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
-          child: mainContent()),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.grey[850],
+        body: Container(
+            padding: const EdgeInsets.only(
+                top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
+            child: mainContent()),
+      ),
     );
   } //END build Method
   //==============================
@@ -104,8 +107,8 @@ class _LoginPageState extends State<LoginPage> {
 //logo
   Widget displayLogo() {
     return Image.asset(
-      "assets/logo_png4.png",
-      scale: 1.4,
+      "assets/logo_png6.png",
+      scale: 2.1,
     );
   } // END logo
 //================================
@@ -118,11 +121,11 @@ class _LoginPageState extends State<LoginPage> {
             emailField(),
             SizedBox(height: 15.0),
             passwordField(),
-            forgotPassBtn(),
-            SizedBox(height: 15.0),
-            //Login Button
-            loginButton(),
+            SizedBox(height: 23.0),
+            loginButton(), //Login Button
             SizedBox(height: 5.0),
+            forgotPassBtn(),
+            SizedBox(height: 30.0),
             notMemberButton(),
           ],
         ));
@@ -134,15 +137,18 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.only(left: 0.0, right: 10.0),
-      height: 62.0,
+      height: 65.0,
       decoration: BoxDecoration(
         border: Border.all(width: 1.0, color: Colors.grey),
         color: Colors.white,
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(0.0),
       ),
       child: TextFormField(
         validator: (input) {
           if (input.isEmpty) {
+            setState(() {
+              _btnState = 0;
+            });
             return "Email field cannot be empty";
           }
         },
@@ -151,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
         decoration: InputDecoration(
             border: InputBorder.none,
             hintText: "Email address",
-            hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[800]),
+            hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[700]),
             prefixIcon: Icon(Icons.email, color: Colors.grey[800])),
         obscureText: false,
       ),
@@ -164,15 +170,18 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.only(left: 0.0, right: 10.0),
-      height: 62.0,
+      height: 65.0,
       decoration: BoxDecoration(
         border: Border.all(width: 1.0, color: Colors.grey),
         color: Colors.white,
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(0.0),
       ),
       child: TextFormField(
         validator: (input) {
           if (input.isEmpty) {
+            setState(() {
+              _btnState = 0;
+            });
             return "Password field cannot be empty";
           }
         },
@@ -181,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
         decoration: InputDecoration(
             border: InputBorder.none,
             hintText: "Password",
-            hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[800]),
+            hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[700]),
             prefixIcon: Icon(Icons.lock, color: Colors.grey[800])),
         obscureText: true,
       ),
@@ -192,16 +201,16 @@ class _LoginPageState extends State<LoginPage> {
 //Reset button
   Widget loginButton() {
     return Container(
-      height: 70.0,
-      width: 230.0,
+      height: 65.0,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Color(0xFF21947e),
         border: Border.all(width: 0.0, color: Color(0xff0e5648)),
-        borderRadius: BorderRadius.circular(40.0),
+        borderRadius: BorderRadius.circular(5.0),
         boxShadow: [
           new BoxShadow(
             color: Color(0xff096251),
-            offset: new Offset(0, 6.0),
+            offset: new Offset(0, 4.0),
           )
         ],
       ),
@@ -229,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
 //Forgot pass button
   Widget forgotPassBtn() {
     return Align(
-      alignment: Alignment.centerRight,
+      //  alignment: Alignment.centerRight,
       child: FlatButton(
         onPressed: invokeForgotPassPage,
         child: Text("Forgot password?",
@@ -241,11 +250,18 @@ class _LoginPageState extends State<LoginPage> {
 
   //Not a member yet?
   Widget notMemberButton() {
-    return FlatButton(
-      onPressed: invokeSignupPage,
-      child: Text(
-        "Not a member yet? Sign up!",
-        style: TextStyle(fontSize: 18.0, color: Colors.grey),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(width: 2, color: Colors.white30),
+        borderRadius: BorderRadius.circular(40.0),
+      ),
+      child: FlatButton(
+        onPressed: invokeSignupPage,
+        child: Text(
+          "Not a member? Sign up",
+          style: TextStyle(fontSize: 18.0, color: Colors.grey),
+        ),
       ),
     );
   } //END Not a member yet?
@@ -254,6 +270,8 @@ class _LoginPageState extends State<LoginPage> {
   void invokeForgotPassPage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ForgotPassword()));
-  }
+  } //END
+  //==========================================
+
 //-------------------------------------------------------
 }

@@ -38,7 +38,7 @@ class _ResetPageState extends State<ResetPage> {
       backgroundColor: Colors.grey[850],
       appBar: AppBar(
         backgroundColor: Colors.red[800],
-        title: Text("Reset password..."),
+        title: Text("Reset password"),
       ),
       body: Container(
         padding: const EdgeInsets.all(20.0),
@@ -80,7 +80,7 @@ class _ResetPageState extends State<ResetPage> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
-            "Resetting password for: ${widget.user.email}",
+            "Reset password for: ${widget.user.email}?",
             style: TextStyle(fontSize: 18.0),
           ),
           Container(
@@ -100,7 +100,7 @@ class _ResetPageState extends State<ResetPage> {
   Widget resetBtn() {
     return FlatButton(
         color: Colors.blue[800],
-        child: animatedBtn("RESET"),
+        child: animatedBtn("YES, RESET"),
         onPressed: () {
           // sendPasswordResetEmail(widget.user.email);
           resetBtnPressed();
@@ -150,7 +150,7 @@ class _ResetPageState extends State<ResetPage> {
             // usually buttons at the bottom of the dialog
             new FlatButton(
               child: Text("CLOSE",
-                  style: TextStyle(fontSize: 19.0, color: Colors.blue[800])),
+                  style: TextStyle(fontSize: 18.0, color: Colors.blue[800])),
               onPressed: () {
                 Navigator.of(context).pop();
               },

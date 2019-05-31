@@ -40,6 +40,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[850],
       body: mainContent(),
     );
@@ -117,6 +118,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       decoration: BoxDecoration(
         border: Border.all(width: 1.0, color: Colors.grey),
         color: Colors.white,
+        borderRadius: BorderRadius.circular(0.0),
       ),
       child: TextField(
         keyboardType: TextInputType.emailAddress,
@@ -136,15 +138,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget resetPasswordBtn() {
     return Container(
       height: 70.0,
-      width: 230.0,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Color(0xFF21947e),
         border: Border.all(width: 0.0, color: Color(0xff0e5648)),
-        borderRadius: BorderRadius.circular(40.0),
+        borderRadius: BorderRadius.circular(5.0),
         boxShadow: [
           new BoxShadow(
             color: Color(0xff096251),
-            offset: new Offset(0, 6.0),
+            offset: new Offset(0, 4.0),
           )
         ],
       ),
