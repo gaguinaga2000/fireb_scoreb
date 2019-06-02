@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './login_page.dart';
+import './main.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -12,7 +13,8 @@ class _SignUpPageState extends State<SignUpPage> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  bool _passObscure = true;
+  Color _eyeColor = Colors.grey;
   int _btnState = 0;
 
   String _errorMessage = '';
@@ -55,32 +57,11 @@ class _SignUpPageState extends State<SignUpPage> {
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey[850],
-        body: Stack(
-children: <Widget>[
-  Opacity(
-    opacity: .3,
-      child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  alignment: FractionalOffset.center,
-                  image: AssetImage("assets/login_bg.jpg"
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              padding: const EdgeInsets.only(
-                  top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
-        ),
-  ),
-
-         Padding(
+        body: Container(
+            decoration: BoxDecoration(),
             padding: const EdgeInsets.only(
-                  top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
-           child: mainContent(),
-         ),
-],
-
-        )
+                top: 60.0, bottom: 20.0, right: 20.0, left: 20.0),
+            child: mainContent()),
       ),
     );
   }
@@ -100,7 +81,7 @@ children: <Widget>[
 
   //logo
   final Image displayLogo = Image.asset(
-    "assets/logo_png6.png",
+    "assets/logo_png5.png",
     scale: 2.1,
   );
   // END logo
@@ -174,17 +155,33 @@ children: <Widget>[
             setState(() {
               _btnState = 0;
             });
-            return "Password is too short.";
+            return "Password must contain at least 6 characters.";
           }
         },
         onSaved: (input) => _password = input,
         style: TextStyle(fontSize: 20.0),
         decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: "Password (6 or more characters)",
-            hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[700]),
-            prefixIcon: Icon(Icons.lock, color: Colors.grey[800])),
-        obscureText: true,
+          border: InputBorder.none,
+          hintText: "Choose a password",
+          hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[700]),
+          prefixIcon: Icon(Icons.lock, color: Colors.grey[800]),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.remove_red_eye, color: _eyeColor),
+            tooltip: 'Show password',
+            onPressed: () {
+              setState(() {
+                if (_passObscure) {
+                  _passObscure = false;
+                  _eyeColor = Colors.cyan[800];
+                } else {
+                  _passObscure = true;
+                  _eyeColor = Colors.grey;
+                }
+              });
+            },
+          ),
+        ),
+        obscureText: _passObscure,
       ),
     );
   } //END password field
@@ -287,8 +284,7 @@ children: <Widget>[
 
 //==========================================
   void invokeLoginPage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
   } //END
 
   //----------------

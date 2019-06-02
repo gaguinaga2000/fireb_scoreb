@@ -38,11 +38,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey[850],
-      body: mainContent(),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.grey[850],
+        body: mainContent(),
+      ),
     );
   }
 
@@ -80,12 +85,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
             ),
             //Enter your email address
-            Text(
-              "Email address: ",
-              style: TextStyle(color: Color(0xff27ecc9), fontSize: 17.0),
-            ),
+            
             Padding(
-              padding: const EdgeInsets.only(top: 5.0, bottom: 20.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: emailField(),
             ),
 
@@ -113,7 +115,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget emailField() {
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.only(left: 20.0, right: 10.0),
+      padding: EdgeInsets.only(left: 0.0, right: 10.0),
       height: 60.0,
       decoration: BoxDecoration(
         border: Border.all(width: 1.0, color: Colors.grey),
@@ -129,6 +131,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         },
         decoration: InputDecoration(
           border: InputBorder.none,
+           hintText: "Email address",
+            hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[700]),
+              prefixIcon: Icon(Icons.email, color: Colors.grey[800]),
         ),
       ),
     );

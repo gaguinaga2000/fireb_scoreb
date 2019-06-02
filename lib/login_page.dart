@@ -20,6 +20,9 @@ class _LoginPageState extends State<LoginPage> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool _passObscure = true;
+  Color _eyeColor = Colors.grey;
+
   int _btnState = 0;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -95,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
         //On succesful logIn, set _authStatus = AuthStatus.signedIn
         widget.onSignedIn(user);
       }).catchError((e) {
+        print(e.message);
         setState(() {
           _btnState = 0;
         });
@@ -107,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
 //logo
   Widget displayLogo() {
     return Image.asset(
-      "assets/logo_png6.png",
+      "assets/logo_png5.png",
       scale: 2.1,
     );
   } // END logo
@@ -182,17 +186,34 @@ class _LoginPageState extends State<LoginPage> {
             setState(() {
               _btnState = 0;
             });
-            return "Password field cannot be empty";
+      return "Password field cannot be empty";
+    
           }
         },
         onSaved: (input) => _password = input,
         style: TextStyle(fontSize: 20.0),
         decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: "Password",
-            hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[700]),
-            prefixIcon: Icon(Icons.lock, color: Colors.grey[800])),
-        obscureText: true,
+          border: InputBorder.none,
+          hintText: "Password",
+          hintStyle: TextStyle(fontSize: 19.0, color: Colors.grey[700]),
+          prefixIcon: Icon(Icons.lock, color: Colors.grey[800]),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.remove_red_eye, color: _eyeColor),
+           tooltip: 'Show password',
+            onPressed: () {
+              setState(() {
+                if (_passObscure) {
+                  _passObscure = false;
+                  _eyeColor = Colors.cyan[800];
+                } else {
+                  _passObscure = true;
+                  _eyeColor = Colors.grey;
+                }
+              });
+            },
+          ),
+        ),
+        obscureText: _passObscure,
       ),
     );
   } //END password field
