@@ -196,15 +196,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     _showSnackBar();
   }
 
-//check if user email exists
-  Future<QuerySnapshot> checkIfEmailExists() async {
-    return Firestore.instance
-        .collection("users")
-        .where('email', isEqualTo: _email)
-        .getDocuments();
-  } //END check if email is real
-  //==================================================
-
 //Firebase default reset email function
   Future<void> sendPasswordResetEmail(String email) async {
     return FirebaseAuth.instance.sendPasswordResetEmail(email: email);

@@ -96,10 +96,9 @@ class _SignUpPageState extends State<SignUpPage> {
             SizedBox(height: 15.0),
             passwordField(),
             SizedBox(height: 23.0),
-            //Signup Button
-            signUpButton(),
-            SizedBox(height: 5.0),
-            hasAccountButton(),
+            signUpButton(), //Signup Button
+            SizedBox(height: 40.0),
+            haveAnAccount(),
           ],
         ));
   } //END displayForm
@@ -187,18 +186,6 @@ class _SignUpPageState extends State<SignUpPage> {
   } //END password field
 //===================================================
 
-//Container for bgImage
-  Container bgContainer = Container(
-    decoration: BoxDecoration(
-      image: DecorationImage(
-        alignment: FractionalOffset.center,
-        image: AssetImage(""),
-        fit: BoxFit.cover,
-      ),
-    ),
-  );
-  //END for Container
-
 //Reset button
   Widget signUpButton() {
     return Container(
@@ -221,6 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
           setState(() {
             _btnState = 1;
           });
+          // _showDialog();
           signUp();
         },
         child: signUpBtnChild(),
@@ -234,15 +222,16 @@ class _SignUpPageState extends State<SignUpPage> {
     final formState = _formKey.currentState;
     if (formState.validate()) {
       formState.save();
-
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: _email, password: _password)
           .then((user) {
         user.sendEmailVerification();
-        setDisplayName(user);
-
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (cntext) => LoginPage()));
+        //    setDisplayName(user);
+        _showDialog();
+        FirebaseAuth.instance.signOut();
+        setState(() {
+          _btnState = 0;
+        });
       }).catchError((e) {
         setState(() {
           _btnState = 0;
@@ -284,8 +273,78 @@ class _SignUpPageState extends State<SignUpPage> {
 
 //==========================================
   void invokeLoginPage() {
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
     Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
   } //END
+//========================
+
+//okay Button
+  Widget okayButton() {
+    return Container(
+      alignment: Alignment.center,
+      width: 275.0,
+      height: 45.0,
+      decoration: BoxDecoration(
+        border: Border.all(width: 1.0, color: Colors.grey[600]),
+        color: Colors.yellow[800],
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      child: FlatButton(
+        child: Text("Okay",
+            style: TextStyle(fontSize: 19.0, color: Colors.grey[900])),
+        onPressed: () {
+          Navigator.of(context, rootNavigator: true).pop();
+          invokeLoginPage();
+        },
+      ),
+    );
+  } //END
+  //===================================
+
+  // user defined function
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text("Verification email sent!"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                  "Please click on the link in the verification email sent to your email. Thank you!",
+                  style: TextStyle(fontSize: 19.0)),
+              SizedBox(height: 20.0),
+              okayButton(),
+            ],
+          ),
+        );
+      },
+    );
+  } //END _showDialog
+  //=========================================================
+
+  //Have an account?
+  Widget haveAnAccount() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(width: 2, color: Colors.white30),
+        borderRadius: BorderRadius.circular(40.0),
+      ),
+      child: FlatButton(
+        onPressed: invokeLoginPage,
+        child: Text(
+          "Have an account? Sign in",
+          style: TextStyle(fontSize: 18.0, color: Colors.grey),
+        ),
+      ),
+    );
+  } //END Have an account?
+//==========================================
 
   //----------------
 }

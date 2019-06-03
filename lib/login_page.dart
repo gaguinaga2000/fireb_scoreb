@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './signup_page.dart';
@@ -23,6 +24,9 @@ class _LoginPageState extends State<LoginPage> {
   bool _passObscure = true;
   Color _eyeColor = Colors.grey;
 
+  String _snackBarMessage =
+      "You entered an incorrect email, password, or both.";
+
   int _btnState = 0;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -30,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
 //login Failure snackBar
   void _showSnackbar() {
     final SnackBar loginSnack = SnackBar(
-      content: Text("You entered an incorrect email, password, or both.",
+      content: Text(_snackBarMessage,
           style: TextStyle(color: Colors.white, fontSize: 18.0)),
       backgroundColor: Colors.red[800],
     );
@@ -96,7 +100,19 @@ class _LoginPageState extends State<LoginPage> {
           .signInWithEmailAndPassword(email: _email, password: _password)
           .then((user) {
         //On succesful logIn, set _authStatus = AuthStatus.signedIn
-        widget.onSignedIn(user);
+        if (!user.isEmailVerified) {
+          setState(() {
+            _snackBarMessage =
+                "Verify your Email: please check your email and click the link.";
+            _btnState = 0;
+            FirebaseAuth.instance.signOut();
+          });
+          _showSnackbar();
+          return 0;
+        } else {
+          checkIfDocIsReal(user);
+          widget.onSignedIn(user);
+        }
       }).catchError((e) {
         print(e.message);
         setState(() {
@@ -186,8 +202,7 @@ class _LoginPageState extends State<LoginPage> {
             setState(() {
               _btnState = 0;
             });
-      return "Password field cannot be empty";
-    
+            return "Password field cannot be empty";
           }
         },
         onSaved: (input) => _password = input,
@@ -199,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
           prefixIcon: Icon(Icons.lock, color: Colors.grey[800]),
           suffixIcon: IconButton(
             icon: Icon(Icons.remove_red_eye, color: _eyeColor),
-           tooltip: 'Show password',
+            tooltip: 'Show password',
             onPressed: () {
               setState(() {
                 if (_passObscure) {
@@ -293,6 +308,40 @@ class _LoginPageState extends State<LoginPage> {
         context, MaterialPageRoute(builder: (context) => ForgotPassword()));
   } //END
   //==========================================
+
+//check if Doc is Real
+  Future<void> checkIfDocIsReal(FirebaseUser user) async {
+    Firestore.instance
+        .collection("users")
+        .document(user.uid)
+        .get()
+        .then((docSnapshot) => {
+              if (docSnapshot.exists){
+                  //do nothing
+                }
+              else {
+                  setDisplayName(user), //creates document
+                }
+            });
+  } //END
+
+//==================================================
+//sets email as "displayname"
+  void setDisplayName(FirebaseUser user) {
+    DocumentReference docRef =
+        Firestore.instance.collection("users").document(user.uid);
+
+    Map<String, dynamic> updateProfile = {
+      "display_name": user.email,
+      "email": user.email,
+      "age": "",
+      "favorite_quote": "",
+    };
+
+    docRef.setData(updateProfile).whenComplete(() {
+      print("profile updated");
+    });
+  } //END
 
 //-------------------------------------------------------
 }
